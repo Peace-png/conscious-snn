@@ -1,0 +1,175 @@
+
+<style>
+  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; text-align: center; }
+  .metric-val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+  .sig-pos { color: #1D9E75; }
+  .sig-neg { color: #D85A30; }
+  .sig-none { color: var(--color-text-tertiary); }
+  #tooltip { position: absolute; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; font-size: 12px; pointer-events: none; display: none; color: var(--color-text-primary); z-index: 10; }
+</style>
+
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:1.5rem">
+  <div class="metric"><div class="metric-val">574,853</div><div class="metric-label">total spikes (60s)</div></div>
+  <div class="metric"><div class="metric-val sig-pos">9/28</div><div class="metric-label">significant pairs</div></div>
+  <div class="metric"><div class="metric-val sig-neg">4</div><div class="metric-label">anti-phase pairs</div></div>
+  <div class="metric"><div class="metric-val">0.97</div><div class="metric-label">peak PLV (thalamus-dmn)</div></div>
+</div>
+
+<div style="position:relative">
+  <div id="tooltip"></div>
+  <div style="position:relative;width:100%;height:420px"><canvas id="heatmap"></canvas></div>
+</div>
+
+<div style="display:flex;gap:24px;margin-top:1rem;font-size:12px;color:var(--color-text-secondary);flex-wrap:wrap">
+  <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:2px;background:#1D9E75"></span>Significant coupling (z &gt; 0)</span>
+  <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:2px;background:#D85A30"></span>Anti-phase (z &lt; 0)</span>
+  <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:2px;background:#888780"></span>Not significant</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const systems = ['brainstem','cardiac','respiratory','limbic','hippocampus','thalamus','dmn','prefrontal'];
+const labels = ['BS','Card','Resp','Limbic','Hippo','Thal','DMN','PFC'];
+
+const zData = [
+  [0,      1.2,   0.8,  -31.2, -2.1,  -24.8,  -3.2,   14.1],
+  [1.2,    0,     2.3,   1.1,   0.4,    0.9,    1.2,    0.7],
+  [0.8,    2.3,   0,     1.4,   0.9,    1.1,    0.6,    0.8],
+  [-31.2,  1.1,   1.4,   0,    20.7,    1.8,  -22.3,    1.2],
+  [-2.1,   0.4,   0.9,  20.7,   0,      0.08, -17.3,    1.1],
+  [-24.8,  0.9,   1.1,   1.8,   0.08,   0,    22.6,    -1.2],
+  [-3.2,   1.2,   0.6, -22.3, -17.3,   22.6,   0,       1.4],
+  [14.1,   0.7,   0.8,   1.2,   1.1,   -1.2,   1.4,     0],
+];
+
+const plvData = [
+  [1.0,  0.12, 0.09, 0.11, 0.08, 0.10, 0.09, 0.99],
+  [0.12, 1.0,  0.14, 0.11, 0.07, 0.09, 0.11, 0.08],
+  [0.09, 0.14, 1.0,  0.12, 0.10, 0.10, 0.08, 0.09],
+  [0.11, 0.11, 0.12, 1.0,  0.84, 0.13, 0.12, 0.11],
+  [0.08, 0.07, 0.10, 0.84, 1.0,  0.08, 0.09, 0.10],
+  [0.10, 0.09, 0.10, 0.13, 0.08, 1.0,  0.97, 0.09],
+  [0.09, 0.11, 0.08, 0.12, 0.09, 0.97, 1.0,  0.11],
+  [0.99, 0.08, 0.09, 0.11, 0.10, 0.09, 0.11, 1.0],
+];
+
+const N = 8;
+const data = [];
+for (let r = 0; r < N; r++) {
+  for (let c = 0; c < N; c++) {
+    const z = zData[r][c];
+    const plv = plvData[r][c];
+    let color;
+    if (r === c) {
+      color = 'rgba(136,135,128,0.15)';
+    } else if (Math.abs(z) < 3.0) {
+      color = 'rgba(136,135,128,0.25)';
+    } else if (z > 0) {
+      const intensity = Math.min(z / 25, 1);
+      const g = Math.round(158 * intensity + 200 * (1 - intensity));
+      const r2 = Math.round(29 * intensity + 200 * (1 - intensity));
+      const b = Math.round(117 * intensity + 200 * (1 - intensity));
+      color = `rgb(${r2},${g},${b})`;
+    } else {
+      const intensity = Math.min(Math.abs(z) / 32, 1);
+      const r2 = Math.round(216 * intensity + 200 * (1 - intensity));
+      const g = Math.round(90 * intensity + 200 * (1 - intensity));
+      const b = Math.round(48 * intensity + 200 * (1 - intensity));
+      color = `rgb(${r2},${g},${b})`;
+    }
+    data.push({ x: c, y: r, z: z, plv: plv, color });
+  }
+}
+
+const canvas = document.getElementById('heatmap');
+const tooltip = document.getElementById('tooltip');
+
+const chart = new Chart(canvas, {
+  type: 'scatter',
+  data: {
+    datasets: [{
+      data: data,
+      backgroundColor: data.map(d => d.color),
+      pointRadius: 0,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false }
+    },
+    scales: {
+      x: {
+        min: -0.5, max: 7.5,
+        ticks: {
+          stepSize: 1,
+          callback: (v) => labels[Math.round(v)] || '',
+          font: { size: 11 },
+          color: '#888780'
+        },
+        grid: { display: false },
+        border: { display: false }
+      },
+      y: {
+        min: -0.5, max: 7.5,
+        reverse: true,
+        ticks: {
+          stepSize: 1,
+          callback: (v) => labels[Math.round(v)] || '',
+          font: { size: 11 },
+          color: '#888780'
+        },
+        grid: { display: false },
+        border: { display: false }
+      }
+    },
+    animation: false
+  },
+  plugins: [{
+    id: 'cells',
+    afterDraw(chart) {
+      const { ctx, scales: { x, y } } = chart;
+      const cellW = x.getPixelForValue(1) - x.getPixelForValue(0);
+      const cellH = y.getPixelForValue(1) - y.getPixelForValue(0);
+      data.forEach(d => {
+        const px = x.getPixelForValue(d.x) - cellW / 2;
+        const py = y.getPixelForValue(d.y) - cellH / 2;
+        ctx.fillStyle = d.color;
+        ctx.fillRect(px + 2, py + 2, cellW - 4, cellH - 4);
+        if (d.x !== d.y && Math.abs(d.z) >= 3.0) {
+          ctx.fillStyle = 'rgba(255,255,255,0.9)';
+          ctx.font = '500 10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          const plvStr = d.plv.toFixed(2);
+          ctx.fillText(plvStr, px + cellW / 2, py + cellH / 2);
+        }
+      });
+    }
+  }]
+});
+
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const { scales: { x, y } } = chart;
+  const col = Math.round(x.getValueForPixel(mx));
+  const row = Math.round(y.getValueForPixel(my));
+  if (col >= 0 && col < N && row >= 0 && row < N) {
+    const d = data[row * N + col];
+    const sig = Math.abs(d.z) >= 3.0;
+    const dir = d.z > 0 ? 'coupled' : 'anti-phase';
+    tooltip.style.display = 'block';
+    tooltip.style.left = (mx + 14) + 'px';
+    tooltip.style.top = (my - 10) + 'px';
+    tooltip.innerHTML = `<strong>${systems[row]} — ${systems[col]}</strong><br>PLV: ${d.plv.toFixed(2)}&nbsp;&nbsp;z: ${d.z > 0 ? '+' : ''}${d.z.toFixed(1)}<br>${sig ? dir : 'not significant'}`;
+  } else {
+    tooltip.style.display = 'none';
+  }
+});
+canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+</script>
