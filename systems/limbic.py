@@ -13,7 +13,7 @@ Key features:
 """
 
 from brian2 import (
-    NeuronGroup, Synapses, PoissonGroup, SpikeMonitor, StateMonitor,
+    NeuronGroup, Synapses, PoissonGroup, PoissonInput, SpikeMonitor, StateMonitor,
     Hz, ms, mV, nA, nS, pA
 )
 import numpy as np
@@ -118,6 +118,12 @@ class LimbicSystem:
             }
         )
 
+        # CRITICAL: Add spontaneous background drive to ACC
+        # ACC has no intrinsic drive - needs background noise
+        self.acc_noise = PoissonInput(
+            self.acc, 'I_ext', N=10, rate=200*Hz, weight=1.5*mV
+        )
+
         # Amygdala internal connectivity
         # BL → CE (fear conditioning pathway)
         self.bl_to_ce = Synapses(
@@ -167,23 +173,23 @@ class LimbicSystem:
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.basolateral_amygdala.run_regularly('''
 v = clip(v, -75*mV, -40*mV)
-I_osc = clip(I_osc, -15*mV, 15*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_osc = clip(I_osc, -20*mV, 30*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 
         self.central_amygdala.run_regularly('''
 v = clip(v, -75*mV, -40*mV)
-I_bl = clip(I_bl, -15*mV, 15*mV)
-I_pfc = clip(I_pfc, -15*mV, 15*mV)
+I_bl = clip(I_bl, -20*mV, 30*mV)
+I_pfc = clip(I_pfc, -20*mV, 30*mV)
 ''', dt=1*ms)
 
         self.acc.run_regularly('''
 v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 

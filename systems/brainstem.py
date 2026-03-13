@@ -172,25 +172,25 @@ class BrainstemSystem:
         # This clamps AFTER each step, guaranteeing bounded values
         self.locus_coeruleus.run_regularly('''
 v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_tonic = clip(I_tonic, 0*mV, 20*mV)  # Increased upper bound
 I_phasic = clip(I_phasic, 0*mV, 20*mV)
 ''', dt=1*ms)
 
         self.raphe.run_regularly('''
 v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_5ht = clip(I_5ht, 0*mV, 20*mV)  # Increased from I_drive
-I_drive = clip(I_drive, 0*mV, 15*mV)
+I_drive = clip(I_drive, 0*mV, 30*mV)
 ''', dt=1*ms)
 
         self.reticular.run_regularly('''
 v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
-I_mod = clip(I_mod, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
+I_mod = clip(I_mod, -10*mV, 30*mV)
 I_bg = clip(I_bg, 0*mV, 20*mV)  # Increased for background activity
 ''', dt=1*ms)
 

@@ -125,7 +125,7 @@ class CardiacSystem:
         self.vagal_afferent.tau_card = 100*ms
         self.vagal_afferent.tau_baro = 50*ms
         self.vagal_afferent.v_rest = -65*mV
-        self.vagal_afferent.v_thresh = -50*mV
+        self.vagal_afferent.v_thresh = -55*mV  # Lowered to close gap
         self.vagal_afferent.v = -65*mV
         self.vagal_afferent.I_cardiac = 0*mV
         self.vagal_afferent.I_baroreceptor = 0*mV
@@ -160,24 +160,24 @@ class CardiacSystem:
         # This clamps AFTER each step, guaranteeing bounded values
         self.atrial.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
-I_pacemaker = clip(I_pacemaker, -15*mV, 20*mV)
-I_vagal = clip(I_vagal, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
+I_pacemaker = clip(I_pacemaker, -10*mV, 35*mV)
+I_vagal = clip(I_vagal, -10*mV, 25*mV)
 ''', dt=1*ms)
 
         self.ventricular.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
-I_pacemaker = clip(I_pacemaker, -15*mV, 15*mV)
-I_vagal = clip(I_vagal, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
+I_pacemaker = clip(I_pacemaker, -10*mV, 30*mV)
+I_vagal = clip(I_vagal, -10*mV, 25*mV)
 ''', dt=1*ms)
 
         self.vagal_afferent.run_regularly('''
 v = clip(v, -80*mV, -40*mV)
-I_cardiac = clip(I_cardiac, -15*mV, 15*mV)
-I_baroreceptor = clip(I_baroreceptor, -15*mV, 15*mV)
+I_cardiac = clip(I_cardiac, -20*mV, 30*mV)
+I_baroreceptor = clip(I_baroreceptor, -20*mV, 30*mV)
 ''', dt=1*ms)
 
         # Add monitors

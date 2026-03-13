@@ -12,7 +12,7 @@ Key features:
 """
 
 from brian2 import (
-    NeuronGroup, Synapses, PoissonGroup, SpikeMonitor, StateMonitor,
+    NeuronGroup, Synapses, PoissonGroup, PoissonInput, SpikeMonitor, StateMonitor,
     Hz, ms, mV, nA, nS, pA
 )
 import numpy as np
@@ -109,6 +109,19 @@ class PrefrontalSystem:
                 'a': 4,
                 'b': 50*mV,
             }
+        )
+
+        # CRITICAL: Add spontaneous background drive to AdaptiveExpLIF populations
+        # Without this, cortex stays silent waiting for subcortical input that never comes
+        # (biological correlate: ongoing synaptic noise from background activity)
+        self.dlpfc_noise = PoissonInput(
+            self.dlpfc, 'I_ext', N=10, rate=200*Hz, weight=1.5*mV
+        )
+        self.vlpfc_noise = PoissonInput(
+            self.vlpfc, 'I_ext', N=10, rate=200*Hz, weight=1.5*mV
+        )
+        self.ofc_noise = PoissonInput(
+            self.ofc, 'I_ext', N=10, rate=200*Hz, weight=1.5*mV
         )
 
         # Intra-PFC connectivity
@@ -208,22 +221,22 @@ class PrefrontalSystem:
         self.dlpfc.run_regularly('''
 v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 
         self.vlpfc.run_regularly('''
 v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 
         self.mpfc.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -15*mV, 15*mV)
+I_osc = clip(I_osc, -20*mV, 30*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
@@ -232,14 +245,14 @@ I_ext = clip(I_ext, -10*mV, 10*mV)
         self.ofc.run_regularly('''
 v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 
         self.top_down_output.run_regularly('''
 v = clip(v, -80*mV, -40*mV)
-I_control = clip(I_control, -15*mV, 15*mV)
+I_control = clip(I_control, -15*mV, 30*mV)
 ''', dt=1*ms)
 
         # Add monitors

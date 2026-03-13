@@ -192,10 +192,10 @@ class ThalamusSystem:
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.relay_nuclei.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_relay = clip(I_relay, -15*mV, 15*mV)
-I_osc = clip(I_osc, -15*mV, 15*mV)
-I_cortical = clip(I_cortical, -15*mV, 15*mV)
-I_brainstem = clip(I_brainstem, -15*mV, 15*mV)
+I_relay = clip(I_relay, -20*mV, 30*mV)
+I_osc = clip(I_osc, -20*mV, 30*mV)
+I_cortical = clip(I_cortical, -20*mV, 30*mV)
+I_brainstem = clip(I_brainstem, -20*mV, 30*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
 T_ca = clip(T_ca, 0*mV, 15*mV)
@@ -203,7 +203,7 @@ T_ca = clip(T_ca, 0*mV, 15*mV)
 
         self.reticular_nucleus.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -15*mV, 15*mV)
+I_osc = clip(I_osc, -20*mV, 30*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
@@ -211,7 +211,7 @@ I_ext = clip(I_ext, -10*mV, 10*mV)
 
         self.intralaminar.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -15*mV, 15*mV)
+I_osc = clip(I_osc, -20*mV, 30*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)

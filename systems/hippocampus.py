@@ -12,7 +12,7 @@ Key features:
 """
 
 from brian2 import (
-    NeuronGroup, Synapses, PoissonGroup, SpikeMonitor, StateMonitor,
+    NeuronGroup, Synapses, PoissonGroup, PoissonInput, SpikeMonitor, StateMonitor,
     Hz, ms, mV, nA, nS, pA
 )
 import numpy as np
@@ -86,7 +86,7 @@ class HippocampusSystem:
                 'tau_w': 100*ms,
                 'a': 1,
                 'b': 30*mV,
-                'v_thresh': -45*mV,  # Higher threshold for sparse coding
+                'v_thresh': -50*mV,  # Lowered for activity (was -45mV)
             }
         )
 
@@ -125,6 +125,16 @@ class HippocampusSystem:
                 'A_osc': 35*mV,  # Needs 35mV for tau_m=25ms
                 'tau_m': 25*ms,
             }
+        )
+
+        # CRITICAL: Add spontaneous background drive to AdaptiveExpLIF populations
+        # DG and CA3 have no intrinsic drive - they need background noise
+        # Biologically, this represents ongoing synaptic noise from background activity
+        self.dg_noise = PoissonInput(
+            self.dentate_gyrus, 'I_ext', N=8, rate=150*Hz, weight=1.0*mV
+        )
+        self.ca3_noise = PoissonInput(
+            self.ca3, 'I_ext', N=8, rate=150*Hz, weight=1.0*mV
         )
 
         # Trisynaptic pathway: EC → DG → CA3 → CA1
@@ -224,7 +234,7 @@ class HippocampusSystem:
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.entorhinal.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -15*mV, 15*mV)
+I_osc = clip(I_osc, -20*mV, 30*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
@@ -233,22 +243,22 @@ I_ext = clip(I_ext, -10*mV, 10*mV)
         self.dentate_gyrus.run_regularly('''
 v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 
         self.ca3.run_regularly('''
 v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 
         self.ca1.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -15*mV, 15*mV)
+I_osc = clip(I_osc, -20*mV, 30*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
@@ -257,8 +267,8 @@ I_ext = clip(I_ext, -10*mV, 10*mV)
         # CA3 basket cells clamping
         self.ca3_basket.run_regularly('''
 v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -15*mV, 15*mV)
-I_inh = clip(I_inh, -15*mV, 15*mV)
+I_exc = clip(I_exc, -20*mV, 30*mV)
+I_inh = clip(I_inh, -25*mV, 10*mV)
 I_ext = clip(I_ext, -10*mV, 10*mV)
 ''', dt=1*ms)
 
