@@ -436,6 +436,10 @@ class ConsciousNetwork:
             self.brian_network.add(group)
         for monitor in limbic.get_monitors().values():
             self.brian_network.add(monitor)
+        # Add PoissonInput objects
+        if hasattr(limbic, 'get_inputs'):
+            for inp in limbic.get_inputs().values():
+                self.brian_network.add(inp)
 
     def _build_hippocampus(self):
         """Build hippocampus (~30M neurons: CA1, CA3, DG)."""
@@ -466,6 +470,10 @@ class ConsciousNetwork:
             self.brian_network.add(group)
         for monitor in hippocampus.get_monitors().values():
             self.brian_network.add(monitor)
+        # Add PoissonInput objects
+        if hasattr(hippocampus, 'get_inputs'):
+            for inp in hippocampus.get_inputs().values():
+                self.brian_network.add(inp)
 
     def _build_prefrontal(self):
         """Build prefrontal cortex (~200M neurons)."""
@@ -496,6 +504,10 @@ class ConsciousNetwork:
             self.brian_network.add(group)
         for monitor in prefrontal.get_monitors().values():
             self.brian_network.add(monitor)
+        # Add PoissonInput objects
+        if hasattr(prefrontal, 'get_inputs'):
+            for inp in prefrontal.get_inputs().values():
+                self.brian_network.add(inp)
 
     def _build_thalamus(self):
         """Build thalamus (~10M neurons, alpha rhythm generator)."""

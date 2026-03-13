@@ -74,7 +74,7 @@ class CardiacSystem:
             name=f'{self.name}_atrial',
             params={
                 'f_card': 1 * Hz,
-                'A_card': 12 * mV,
+                'A_card': 18 * mV,  # Raised from 12mV - need 18mV to cross 15mV gap
                 'hrv_amp': self.hrv_amplitude,
             }
         )
@@ -85,7 +85,7 @@ class CardiacSystem:
             name=f'{self.name}_ventricular',
             params={
                 'f_card': 1 * Hz,
-                'A_card': 8 * mV,  # Slightly lower amplitude
+                'A_card': 15 * mV,  # Raised from 8mV to ensure firing
                 'hrv_amp': self.hrv_amplitude,
             }
         )

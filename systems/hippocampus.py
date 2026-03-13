@@ -234,10 +234,10 @@ class HippocampusSystem:
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.entorhinal.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -20*mV, 30*mV)
+I_osc = clip(I_osc, -5*mV, 40*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         self.dentate_gyrus.run_regularly('''
@@ -245,7 +245,7 @@ v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
 I_exc = clip(I_exc, -20*mV, 30*mV)
 I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         self.ca3.run_regularly('''
@@ -253,15 +253,15 @@ v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
 I_exc = clip(I_exc, -20*mV, 30*mV)
 I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         self.ca1.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -20*mV, 30*mV)
+I_osc = clip(I_osc, -5*mV, 40*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         # CA3 basket cells clamping
@@ -269,7 +269,7 @@ I_ext = clip(I_ext, -10*mV, 10*mV)
 v = clip(v, -80*mV, -40*mV)
 I_exc = clip(I_exc, -20*mV, 30*mV)
 I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         # Add monitors
@@ -300,6 +300,13 @@ I_ext = clip(I_ext, -10*mV, 10*mV)
     def get_monitors(self):
         """Get all monitors."""
         return self.monitors
+
+    def get_inputs(self):
+        """Get all input objects (PoissonInput, etc.)."""
+        return {
+            'dg_noise': self.dg_noise,
+            'ca3_noise': self.ca3_noise,
+        }
 
     def set_theta_power(self, power: float):
         """Set theta oscillation power (0-1)."""

@@ -112,7 +112,7 @@ class BrainstemSystem:
         )
         self.raphe.tau_m = 50*ms
         self.raphe.v_rest = -65*mV
-        self.raphe.v_thresh = -50*mV
+        self.raphe.v_thresh = -55*mV  # Lowered from -50mV per coma diagnosis
         self.raphe.v = -65*mV
         # Higher baseline drive for serotonin tone
         self.raphe.I_5ht = '8*mV + rand()*2*mV'  # Increased from 3*mV

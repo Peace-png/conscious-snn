@@ -71,7 +71,8 @@ class RespiratorySystem:
             name=f'{self.name}_prebotz',
             params={
                 'f_resp': 0.25 * Hz,
-                'A_resp': 15 * mV,
+                'A_resp': 20 * mV,  # Increased from 15mV for reliable spiking (gap=12mV)
+                'v_thresh': -45 * mV,  # Lowered from -48mV for more margin
             },
             inspiratory_fraction=0.7  # Mostly inspiratory
         )
@@ -82,7 +83,8 @@ class RespiratorySystem:
             name=f'{self.name}_dorsal',
             params={
                 'f_resp': 0.25 * Hz,
-                'A_resp': 10 * mV,
+                'A_resp': 15 * mV,  # Increased from 10mV
+                'v_thresh': -45 * mV,  # Lowered for more margin
             },
             inspiratory_fraction=0.8
         )
@@ -93,7 +95,8 @@ class RespiratorySystem:
             name=f'{self.name}_ventral',
             params={
                 'f_resp': 0.25 * Hz,
-                'A_resp': 8 * mV,
+                'A_resp': 12 * mV,  # Increased from 8mV
+                'v_thresh': -45 * mV,  # Lowered for more margin
             },
             inspiratory_fraction=0.3  # Mostly expiratory
         )

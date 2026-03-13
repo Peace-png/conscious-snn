@@ -73,7 +73,7 @@ class PrefrontalSystem:
             params={
                 'tau_w': 300*ms,  # Longer adaptation for sustained activity
                 'a': 2,
-                'b': 80*mV,
+                'b': 20*mV,  # Reduced from 80mV - was suppressing all activity
             }
         )
 
@@ -84,7 +84,7 @@ class PrefrontalSystem:
             params={
                 'tau_w': 200*ms,
                 'a': 3,
-                'b': 70*mV,
+                'b': 15*mV,  # Reduced from 70mV
             }
         )
 
@@ -107,7 +107,7 @@ class PrefrontalSystem:
             params={
                 'tau_w': 150*ms,
                 'a': 4,
-                'b': 50*mV,
+                'b': 12*mV,  # Reduced from 50mV
             }
         )
 
@@ -223,7 +223,7 @@ v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
 I_exc = clip(I_exc, -20*mV, 30*mV)
 I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         self.vlpfc.run_regularly('''
@@ -231,15 +231,15 @@ v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
 I_exc = clip(I_exc, -20*mV, 30*mV)
 I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         self.mpfc.run_regularly('''
 v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -20*mV, 30*mV)
+I_osc = clip(I_osc, -5*mV, 40*mV)
 I_exc = clip(I_exc, -20*mV, 20*mV)
 I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         self.ofc.run_regularly('''
@@ -247,7 +247,7 @@ v = clip(v, -75*mV, -30*mV)
 w = clip(w, -20*mV, 20*mV)
 I_exc = clip(I_exc, -20*mV, 30*mV)
 I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -10*mV, 10*mV)
+I_ext = clip(I_ext, -5*mV, 35*mV)
 ''', dt=1*ms)
 
         self.top_down_output.run_regularly('''
@@ -287,6 +287,14 @@ I_control = clip(I_control, -15*mV, 30*mV)
     def get_monitors(self):
         """Get all monitors."""
         return self.monitors
+
+    def get_inputs(self):
+        """Get all input objects (PoissonInput, etc.)."""
+        return {
+            'dlpfc_noise': self.dlpfc_noise,
+            'vlpfc_noise': self.vlpfc_noise,
+            'ofc_noise': self.ofc_noise,
+        }
 
     def set_working_memory_load(self, load: float):
         """Set working memory load (0-1)."""
