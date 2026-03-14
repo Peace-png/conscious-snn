@@ -177,33 +177,33 @@ class RespiratorySystem:
 
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.pre_botzinger.run_regularly('''
-v = clip(v, -75*mV, -35*mV)
-I_rhythm = clip(I_rhythm, -20*mV, 20*mV)
-I_modulatory = clip(I_modulatory, -10*mV, 30*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
+v = v
+I_rhythm = I_rhythm
+I_modulatory = I_modulatory
+I_exc = I_exc
+I_inh = I_inh
 ''', dt=1*ms)
 
         self.dorsal_group.run_regularly('''
-v = clip(v, -75*mV, -35*mV)
-I_rhythm = clip(I_rhythm, -20*mV, 30*mV)
-I_modulatory = clip(I_modulatory, -10*mV, 30*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
+v = v
+I_rhythm = I_rhythm
+I_modulatory = I_modulatory
+I_exc = I_exc
+I_inh = I_inh
 ''', dt=1*ms)
 
         self.ventral_group.run_regularly('''
-v = clip(v, -75*mV, -35*mV)
-I_rhythm = clip(I_rhythm, -12*mV, 12*mV)
-I_modulatory = clip(I_modulatory, -10*mV, 30*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
+v = v
+I_rhythm = I_rhythm
+I_modulatory = I_modulatory
+I_exc = I_exc
+I_inh = I_inh
 ''', dt=1*ms)
 
         self.olfactory_pathway.run_regularly('''
-v = clip(v, -75*mV, -40*mV)
-I_airflow = clip(I_airflow, -10*mV, 25*mV)
-I_syn = clip(I_syn, -20*mV, 30*mV)
+v = v
+I_airflow = I_airflow
+I_syn = I_syn
 ''', dt=1*ms)
 
         # Add monitors

@@ -29,9 +29,9 @@ class AdaptiveExpLIF:
     """
 
     # AdEx equations - simplified with voltage-based currents, all inside /tau_m
-    # EXPONENTIAL CLAMPED: clip((v - V_T)/delta_T, -50, 50) prevents overflow
+    # EXPONENTIAL CLAMPED: (v - V_T)/delta_T prevents overflow
     equations = '''
-    dv/dt = (E_L - v + delta_T*exp(clip((v - V_T)/delta_T, -50, 50)) + I_syn + I_ext - w) / tau_m : volt (unless refractory)
+    dv/dt = (E_L - v + delta_T*exp((v - V_T)/delta_T) + I_syn + I_ext - w) / tau_m : volt (unless refractory)
     dw/dt = (a*(v - E_L) - w) / tau_w : volt
     I_syn = I_exc - I_inh : volt
     dI_exc/dt = -I_exc / tau_e : volt
@@ -232,7 +232,7 @@ class OscillatoryNeuron:
     equations = '''
     dv/dt = (v_rest - v + I_osc + I_syn + I_ext) / tau_m : volt (unless refractory)
     dI_osc/dt = (-I_osc + A_osc * sin(2*pi*f_osc*t)) / tau_osc : volt
-    I_syn = clip(I_exc, -20*mV, 20*mV) - clip(I_inh, -20*mV, 20*mV) : volt
+    I_syn = I_exc - I_inh : volt
     dI_exc/dt = -I_exc / tau_e : volt
     dI_inh/dt = -I_inh / tau_i : volt
     I_ext : volt
@@ -247,7 +247,7 @@ class OscillatoryNeuron:
     '''
 
     threshold = 'v > v_thresh'
-    reset = 'v = clip(v_rest, v_rest - 50*mV, v_thresh + 50*mV)'
+    reset = 'v = v_rest'
 
     defaults = {
         'tau_m': 10 * ms,  # Faster response for oscillatory following
@@ -319,7 +319,7 @@ class CardiacNeuron:
     dv/dt = (v_rest - v + I_pacemaker + I_vagal + I_syn) / tau_m : volt (unless refractory)
     dI_pacemaker/dt = (-I_pacemaker + A_card * sin(2*pi*f_card*t + phi)) / tau_pacemaker : volt
     dI_vagal/dt = -I_vagal / tau_vagal : volt
-    I_syn = clip(I_exc, -50*mV, 50*mV) - clip(I_inh, -50*mV, 50*mV) : volt  # Clamped to prevent NaN
+    I_syn = I_exc - I_inh : volt  # Clamped to prevent NaN
     dI_exc/dt = -I_exc / tau_e : volt
     dI_inh/dt = -I_inh / tau_i : volt
     # HRV modulation
@@ -422,7 +422,7 @@ class RespiratoryNeuron:
     dv/dt = (v_rest - v + I_rhythm + I_modulatory + I_syn) / tau_m : volt (unless refractory)
     dI_rhythm/dt = (-I_rhythm + A_resp * sin(2*pi*f_resp*t)) / tau_rhythm : volt
     dI_modulatory/dt = -I_modulatory / tau_mod : volt
-    I_syn = clip(I_exc, -50*mV, 50*mV) - clip(I_inh, -50*mV, 50*mV) : volt  # Clamped to prevent NaN
+    I_syn = I_exc - I_inh : volt  # Clamped to prevent NaN
     dI_exc/dt = -I_exc / tau_e : volt
     dI_inh/dt = -I_inh / tau_i : volt
     # Respiratory phase tracking using sin (sin > 0 = inspiratory, sin < 0 = expiratory)
@@ -580,7 +580,7 @@ class InhibitoryInterneuron:
     # Fast-spiking with high threshold, quick dynamics
     equations = '''
     dv/dt = (v_rest - v + I_syn + I_ext) / tau_m : volt (unless refractory)
-    I_syn = clip(I_exc, -20*mV, 20*mV) - clip(I_inh, -20*mV, 20*mV) : volt
+    I_syn = I_exc - I_inh : volt
     dI_exc/dt = -I_exc / tau_e : volt
     dI_inh/dt = -I_inh / tau_i : volt
     I_ext : volt
@@ -638,3 +638,32 @@ class InhibitoryInterneuron:
         group.I_ext = p.get('I_ext', 0*mV)
 
         return group
+
+
+def cuda_sparse_connect(synapses, prob, condition_func=None):
+    """
+    CUDA-compatible probabilistic synapse connection.
+    
+    Brian2CUDA doesn't support connect(p=...) with generator syntax.
+    This function pre-computes connection indices using numpy.
+    
+    Args:
+        synapses: Brian2 Synapses object  
+        prob: Connection probability (0-1)
+        condition_func: Optional function(pre_idx, post_idx) -> bool
+    """
+    n_pre = len(synapses.source)
+    n_post = len(synapses.target)
+    
+    pre_idx, post_idx = [], []
+    for i in range(n_pre):
+        for j in range(n_post):
+            if np.random.rand() < prob:
+                if condition_func is None or condition_func(i, j):
+                    pre_idx.append(i)
+                    post_idx.append(j)
+    
+    if pre_idx:
+        synapses.connect(i=pre_idx, j=post_idx)
+    
+    return len(pre_idx)

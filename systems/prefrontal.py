@@ -219,40 +219,40 @@ class PrefrontalSystem:
 
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.dlpfc.run_regularly('''
-v = clip(v, -75*mV, -30*mV)
-w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+w = w
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.vlpfc.run_regularly('''
-v = clip(v, -75*mV, -30*mV)
-w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+w = w
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.mpfc.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.ofc.run_regularly('''
-v = clip(v, -75*mV, -30*mV)
-w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+w = w
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.top_down_output.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_control = clip(I_control, -15*mV, 30*mV)
+v = v
+I_control = I_control
 ''', dt=1*ms)
 
         # Add monitors
@@ -298,7 +298,7 @@ I_control = clip(I_control, -15*mV, 30*mV)
 
     def set_working_memory_load(self, load: float):
         """Set working memory load (0-1)."""
-        self.working_memory_load = np.clip(load, 0.0, 1.0)
+        self.working_memory_load = np.load
 
         # Increase recurrent activity with load
         if self.dlpfc_recurrent is not None:
@@ -308,7 +308,7 @@ I_control = clip(I_control, -15*mV, 30*mV)
 
     def set_executive_control(self, strength: float):
         """Set executive control strength (0-1)."""
-        self.executive_control_strength = np.clip(strength, 0.0, 1.0)
+        self.executive_control_strength = np.strength
 
         # Modulate top-down output
         if self.top_down_output is not None:

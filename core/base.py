@@ -216,7 +216,7 @@ class InfluenceMatrix:
             source_pop.neuron_group,
             target_pop.neuron_group,
             model='w_syn : 1',
-            on_pre='I_exc_post = clip(I_exc_post + w_syn*0.3*mV, -30*mV, 30*mV)',  # Clamped and reduced for stability
+            on_pre='I_exc_post += w_syn*0.3*mV',  # Simple addition - CUDA parallelizable
             name=f'syn_{source_name}_to_{target_name}'
         )
         syn.connect(p=connection_prob)

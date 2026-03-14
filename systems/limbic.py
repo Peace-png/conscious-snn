@@ -172,25 +172,25 @@ class LimbicSystem:
 
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.basolateral_amygdala.run_regularly('''
-v = clip(v, -75*mV, -40*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.central_amygdala.run_regularly('''
-v = clip(v, -75*mV, -40*mV)
-I_bl = clip(I_bl, -20*mV, 30*mV)
-I_pfc = clip(I_pfc, -20*mV, 30*mV)
+v = v
+I_bl = I_bl
+I_pfc = I_pfc
 ''', dt=1*ms)
 
         self.acc.run_regularly('''
-v = clip(v, -75*mV, -30*mV)
-w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+w = w
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         # Add monitors
@@ -226,7 +226,7 @@ I_ext = clip(I_ext, -5*mV, 35*mV)
 
     def set_emotional_valence(self, valence: float):
         """Set emotional valence (-1 negative to +1 positive)."""
-        self.emotional_valence = np.clip(valence, -1.0, 1.0)
+        self.emotional_valence = np.valence
 
         # Modulate BL amygdala activity based on valence
         if self.basolateral_amygdala is not None:
@@ -239,7 +239,7 @@ I_ext = clip(I_ext, -5*mV, 35*mV)
 
     def set_arousal(self, level: float):
         """Set arousal level (0=calm, 1=highly aroused)."""
-        self.arousal_level = np.clip(level, 0.0, 1.0)
+        self.arousal_level = np.level
 
         # Increase oscillation amplitude with arousal
         if self.central_amygdala is not None:

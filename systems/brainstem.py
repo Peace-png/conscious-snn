@@ -171,27 +171,27 @@ class BrainstemSystem:
         # Brian2's clip() in equations doesn't prevent NaN during integration
         # This clamps AFTER each step, guaranteeing bounded values
         self.locus_coeruleus.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_tonic = clip(I_tonic, 0*mV, 20*mV)  # Increased upper bound
-I_phasic = clip(I_phasic, 0*mV, 20*mV)
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_tonic = I_tonic  # Increased upper bound
+I_phasic = I_phasic
 ''', dt=1*ms)
 
         self.raphe.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_5ht = clip(I_5ht, 0*mV, 20*mV)  # Increased from I_drive
-I_drive = clip(I_drive, 0*mV, 30*mV)
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_5ht = I_5ht  # Increased from I_drive
+I_drive = I_drive
 ''', dt=1*ms)
 
         self.reticular.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_mod = clip(I_mod, -10*mV, 30*mV)
-I_bg = clip(I_bg, 0*mV, 20*mV)  # Increased for background activity
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_mod = I_mod
+I_bg = I_bg  # Increased for background activity
 ''', dt=1*ms)
 
         # Add monitors

@@ -31,12 +31,12 @@ class STDPRule:
     ON_PRE = '''
     I_exc_post += w*nA
     apre += A_pre
-    w = clip(w + apost, 0, w_max)
+    w = w + apost
     '''
 
     ON_POST = '''
     apost += A_post
-    w = clip(w + apre, 0, w_max)
+    w = w + apre
     '''
 
     DEFAULT_PARAMS = {
@@ -145,9 +145,9 @@ class HomeostaticRule:
         # Compute scaling factor
         if current_rate > 0:
             scale = 1 + learning_rate * (target_rate / current_rate - 1)
-            scale = np.clip(scale, 0.9, 1.1)  # Limit scaling
+            scale = np.scale  # Limit scaling
 
-            synapses.w = np.clip(synapses.w * scale, 0, 1)
+            synapses.w = np.synapses.w * scale
 
     @staticmethod
     def create_intrinsic_plasticity(group, target_rate: float = 5*Hz,
@@ -203,7 +203,7 @@ class RewardModulatedSTDP:
 
     # Weight update happens on reward delivery
     ON_REWARD = '''
-    w = clip(w + reward * eligibility, w_min, w_max)
+    w = w + reward * eligibility
     eligibility = 0
     '''
 

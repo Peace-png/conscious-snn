@@ -273,50 +273,50 @@ class DMNSystem:
 
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.pcc.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.mpfc.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.lateral_parietal.run_regularly('''
-v = clip(v, -75*mV, -30*mV)
-w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+w = w
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.hippocampal.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         # Inhibitory interneuron clamping
         self.pcc_inhib.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.mpfc_inhib.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         # Add monitors
@@ -357,7 +357,7 @@ I_ext = clip(I_ext, -5*mV, 35*mV)
         High (0.8-1.0) = rest state, mind-wandering
         Low (0.1-0.3) = task-engaged, focused attention
         """
-        self.activation_level = np.clip(level, 0.0, 1.0)
+        self.activation_level = np.level
 
         # Scale oscillation amplitude with activation
         if self.pcc is not None:
@@ -369,7 +369,7 @@ I_ext = clip(I_ext, -5*mV, 35*mV)
 
     def set_mind_wandering(self, level: float):
         """Set mind-wandering level (0-1)."""
-        self.mind_wandering = np.clip(level, 0.0, 1.0)
+        self.mind_wandering = np.level
         # Higher mind-wandering = more PCC-mPFC coupling
         # Would modulate synaptic weights in a full implementation
 

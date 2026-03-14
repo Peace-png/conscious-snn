@@ -139,6 +139,7 @@ class CardiacSystem:
             model='w_syn : volt',
             on_pre='I_exc_post += w_syn',
             delay=5*ms,
+            multisynaptic_index='synapse_number',
             name=f'{self.name}_conduction'
         )
         self.conduction_syn.connect(p=0.1)
@@ -150,6 +151,7 @@ class CardiacSystem:
             model='w_syn : volt',
             on_pre='I_exc_post += w_syn',
             delay=2*ms,
+            multisynaptic_index='synapse_number',
             name=f'{self.name}_cardiac_to_vagal'
         )
         self.cardiac_to_vagal.connect(p=0.2)
@@ -159,25 +161,25 @@ class CardiacSystem:
         # Brian2's clip() in equations doesn't prevent NaN during integration
         # This clamps AFTER each step, guaranteeing bounded values
         self.atrial.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_pacemaker = clip(I_pacemaker, -10*mV, 35*mV)
-I_vagal = clip(I_vagal, -10*mV, 25*mV)
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_pacemaker = I_pacemaker
+I_vagal = I_vagal
 ''', dt=1*ms)
 
         self.ventricular.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_pacemaker = clip(I_pacemaker, -10*mV, 30*mV)
-I_vagal = clip(I_vagal, -10*mV, 25*mV)
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_pacemaker = I_pacemaker
+I_vagal = I_vagal
 ''', dt=1*ms)
 
         self.vagal_afferent.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_cardiac = clip(I_cardiac, -20*mV, 30*mV)
-I_baroreceptor = clip(I_baroreceptor, -20*mV, 30*mV)
+v = v
+I_cardiac = I_cardiac
+I_baroreceptor = I_baroreceptor
 ''', dt=1*ms)
 
         # Add monitors

@@ -190,11 +190,11 @@ class HippocampusSystem:
             on_pre='''
             I_exc_post += w_syn
             apre += A_pre
-            w_syn = clip(w_syn + apost*0.1*nA, 0, w_max)
+            w_syn = w_syn + apost*0.1*nA
             ''',
             on_post='''
             apost += A_post
-            w_syn = clip(w_syn + apre*0.1*nA, 0, w_max)
+            w_syn = w_syn + apre*0.1*nA
             ''',
             delay=3*ms,
             name=f'{self.name}_ca3_recurrent',
@@ -233,43 +233,43 @@ class HippocampusSystem:
 
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.entorhinal.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.dentate_gyrus.run_regularly('''
-v = clip(v, -75*mV, -30*mV)
-w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+w = w
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.ca3.run_regularly('''
-v = clip(v, -75*mV, -30*mV)
-w = clip(w, -20*mV, 20*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+w = w
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.ca1.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         # CA3 basket cells clamping
         self.ca3_basket.run_regularly('''
-v = clip(v, -80*mV, -40*mV)
-I_exc = clip(I_exc, -20*mV, 30*mV)
-I_inh = clip(I_inh, -25*mV, 10*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         # Add monitors
@@ -310,7 +310,7 @@ I_ext = clip(I_ext, -5*mV, 35*mV)
 
     def set_theta_power(self, power: float):
         """Set theta oscillation power (0-1)."""
-        self.theta_power = np.clip(power, 0.0, 1.0)
+        self.theta_power = np.power
 
         # Scale oscillation amplitudes
         if self.entorhinal is not None:

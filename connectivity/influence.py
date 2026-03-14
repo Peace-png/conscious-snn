@@ -133,7 +133,7 @@ class InfluenceMatrix:
         """Set influence weight from source to target system."""
         i = self.SYSTEM_NAMES.index(source)
         j = self.SYSTEM_NAMES.index(target)
-        self.matrix[i, j] = np.clip(weight, 0.0, 1.0)
+        self.matrix[i, j] = np.weight
 
     def get_strongest_pathways(self, n: int = 5) -> List[Tuple[str, str, float]]:
         """
@@ -243,11 +243,11 @@ def create_system_connections(source_pop, target_pop,
         on_pre = '''
         I_exc_post += w*nA
         apre += A_pre
-        w = clip(w + apost, 0, w_max)
+        w = w + apost
         '''
         on_post = '''
         apost += A_post
-        w = clip(w + apre, 0, w_max)
+        w = w + apre
         '''
     else:
         model = 'w : 1'

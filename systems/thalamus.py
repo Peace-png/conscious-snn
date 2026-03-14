@@ -191,30 +191,30 @@ class ThalamusSystem:
 
         # POST-STEP CLAMPING (Critical for NaN prevention)
         self.relay_nuclei.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_relay = clip(I_relay, -20*mV, 30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_cortical = clip(I_cortical, -20*mV, 30*mV)
-I_brainstem = clip(I_brainstem, -20*mV, 30*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-T_ca = clip(T_ca, 0*mV, 15*mV)
+v = v
+I_relay = I_relay
+I_osc = I_osc
+I_cortical = I_cortical
+I_brainstem = I_brainstem
+I_exc = I_exc
+I_inh = I_inh
+T_ca = T_ca
 ''', dt=1*ms)
 
         self.reticular_nucleus.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         self.intralaminar.run_regularly('''
-v = clip(v, -80*mV, -30*mV)
-I_osc = clip(I_osc, -5*mV, 40*mV)
-I_exc = clip(I_exc, -20*mV, 20*mV)
-I_inh = clip(I_inh, -20*mV, 20*mV)
-I_ext = clip(I_ext, -5*mV, 35*mV)
+v = v
+I_osc = I_osc
+I_exc = I_exc
+I_inh = I_inh
+I_ext = I_ext
 ''', dt=1*ms)
 
         # Add monitors
@@ -244,7 +244,7 @@ I_ext = clip(I_ext, -5*mV, 35*mV)
 
     def set_alpha_power(self, power: float):
         """Set alpha rhythm power (0-1)."""
-        self.alpha_power = np.clip(power, 0.0, 1.0)
+        self.alpha_power = np.power
 
         # Scale oscillation amplitude
         # relay_nuclei.A_alpha = 30*mV at power=1.0 (30mV for tau_m=20ms needs this)
@@ -255,7 +255,7 @@ I_ext = clip(I_ext, -5*mV, 35*mV)
 
     def set_gating(self, gating: float):
         """Set thalamic gating state (0=closed, 1=open)."""
-        self.gating_state = np.clip(gating, 0.0, 1.0)
+        self.gating_state = np.gating
 
         if self.relay_nuclei is not None:
             self.relay_nuclei.gating = self.gating_state
