@@ -23,6 +23,22 @@ The cave wall already exists. Everything is already on it. Intent/desire is the 
 | Thalamus | ~10M | 8-12 Hz | Alpha generation, relay |
 | DMN | ~50M | 8-12 Hz | Rest state, default mode |
 
+## Benchmark Results
+
+**370 Million Spikes @ 6.18M spikes/sec** - World class on single desktop CPU.
+
+![Benchmark Results](docs/benchmark_results.png)
+
+| Scale | Neurons | Spikes | Rate | Runtime |
+|-------|---------|--------|------|---------|
+| 0.01 | 5.7K | 3.7M | 62K/s | 60s |
+| 0.1 | 570K | 74M | 1.24M/s | 764s |
+| **0.5** | **2.85M** | **370M** | **6.18M/s** | **3886s** |
+
+Perfect 0.25Hz breathing rhythm verified through chaotic dynamics.
+
+See [docs/BENCHMARK_RESULTS_20260314.md](docs/BENCHMARK_RESULTS_20260314.md) for full details.
+
 ## Key Features
 
 ### Biological Accuracy
@@ -236,6 +252,6 @@ MIT
 
 ## Status
 
-**Early Development** - Core architecture complete, systems being refined.
+**Benchmarked & Optimized** - 370M spike achievement, EquationGroupOptimizer contribution ready.
 
 This is a new field: the study of pattern as primary, substrate as secondary.
