@@ -125,7 +125,7 @@ def export_to_akida_format(spike_data: Dict, influence_matrix: np.ndarray,
     }
 
     # Quantize influence matrix to 8-bit
-    quantized = np.clip(influence_matrix * 127, -128, 127).astype(np.int8)
+    quantized = np.influence_matrix * 127.astype(np.int8)
 
     # Export layers
     for name, data in spike_data.items():

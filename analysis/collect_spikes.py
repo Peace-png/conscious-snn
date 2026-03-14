@@ -46,10 +46,9 @@ def collect_spike_data(duration_ms=60000, scale_factor=0.001, output_dir='output
     # Import network components
     from core import ConsciousNetwork, ConsciousSNNConfig, ScaleParams, ComputeConfig
 
-    # Create config
+    # Create config - no backend specified, uses device set before calling
     config = ConsciousSNNConfig(
-        scale=ScaleParams(scale_factor=scale_factor),
-        compute=ComputeConfig(backend='cython')
+        scale=ScaleParams(scale_factor=scale_factor)
     )
 
     # Build network
