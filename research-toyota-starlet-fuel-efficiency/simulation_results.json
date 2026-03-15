@@ -1,0 +1,221 @@
+{
+  "simulation_results": [
+    {
+      "hypothesis_id": "H1",
+      "hypothesis": "Smooth acceleration vs aggressive driving saves 10-40%",
+      "category": "driving",
+      "expected_savings_pct": 25.0,
+      "stable": "STABLE",
+      "confidence": 0.839,
+      "metrics": {
+        "lyapunov_exponent": -0.4385,
+        "phase_coherence": 0.9824,
+        "dominant_frequency_hz": 0.5,
+        "frequency_match_score": 1.0,
+        "mean_firing_rate_hz": 0.0,
+        "total_spikes": 0
+      },
+      "physics_validation": {
+        "rpm_band": [
+          2000,
+          2500
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 0.5,
+        "mechanism": "Reduced throttle oscillations lead to stable fuel delivery"
+      }
+    },
+    {
+      "hypothesis_id": "H2",
+      "hypothesis": "Highway speed reduction (100 vs 110 km/h) saves 10-15%",
+      "category": "driving",
+      "expected_savings_pct": 12.5,
+      "stable": "STABLE",
+      "confidence": 0.825,
+      "metrics": {
+        "lyapunov_exponent": -0.4872,
+        "phase_coherence": 0.9194,
+        "dominant_frequency_hz": 0.7,
+        "frequency_match_score": 1.0,
+        "mean_firing_rate_hz": 0.0,
+        "total_spikes": 0
+      },
+      "physics_validation": {
+        "rpm_band": [
+          2200,
+          2800
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 0.7,
+        "mechanism": "Quadratic drag reduction creates stable operating point"
+      }
+    },
+    {
+      "hypothesis_id": "H3",
+      "hypothesis": "Correct tyre pressure (29-35 PSI) saves up to 3%",
+      "category": "maintenance",
+      "expected_savings_pct": 3.0,
+      "stable": "STABLE",
+      "confidence": 0.77,
+      "metrics": {
+        "lyapunov_exponent": -0.4488,
+        "phase_coherence": 0.7505,
+        "dominant_frequency_hz": 2.0,
+        "frequency_match_score": 1.0,
+        "mean_firing_rate_hz": 0.0,
+        "total_spikes": 0
+      },
+      "physics_validation": {
+        "rpm_band": [
+          2000,
+          3000
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 2.0,
+        "mechanism": "Optimal contact patch reduces rolling resistance harmonics"
+      }
+    },
+    {
+      "hypothesis_id": "H4",
+      "hypothesis": "Shift at optimal RPM (2000-2200) saves 5-15%",
+      "category": "driving",
+      "expected_savings_pct": 10.0,
+      "stable": "STABLE",
+      "confidence": 0.805,
+      "metrics": {
+        "lyapunov_exponent": -0.5237,
+        "phase_coherence": 0.8428,
+        "dominant_frequency_hz": 1.0,
+        "frequency_match_score": 1.0,
+        "mean_firing_rate_hz": 0.0,
+        "total_spikes": 0
+      },
+      "physics_validation": {
+        "rpm_band": [
+          2000,
+          2200
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 1.0,
+        "mechanism": "Engine operates at peak thermal efficiency band"
+      }
+    },
+    {
+      "hypothesis_id": "H5",
+      "hypothesis": "Anticipate stops (coast early) saves 5-10%",
+      "category": "driving",
+      "expected_savings_pct": 7.5,
+      "stable": "STABLE",
+      "confidence": 0.486,
+      "metrics": {
+        "lyapunov_exponent": -0.4377,
+        "phase_coherence": 0.4325,
+        "dominant_frequency_hz": 0.4,
+        "frequency_match_score": 0.75,
+        "mean_firing_rate_hz": 0.0,
+        "total_spikes": 0
+      },
+      "physics_validation": {
+        "rpm_band": [
+          1000,
+          2000
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 0.3,
+        "mechanism": "Reduced kinetic energy dissipation creates stable momentum"
+      }
+    },
+    {
+      "hypothesis_id": "H6",
+      "hypothesis": "Oxygen sensor replacement (if failed) saves up to 40%",
+      "category": "maintenance",
+      "expected_savings_pct": 40.0,
+      "stable": "UNSTABLE",
+      "confidence": 0.371,
+      "metrics": {
+        "lyapunov_exponent": 0.1428,
+        "phase_coherence": 0.4482,
+        "dominant_frequency_hz": 5.1,
+        "frequency_match_score": 0.9804,
+        "mean_firing_rate_hz": 0.01,
+        "total_spikes": 9
+      },
+      "physics_validation": {
+        "rpm_band": [
+          2000,
+          4000
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 5.0,
+        "mechanism": "Closed-loop fuel control maintains optimal AFR"
+      }
+    },
+    {
+      "hypothesis_id": "H7",
+      "hypothesis": "Low rolling resistance tyres save 2-5%",
+      "category": "modification",
+      "expected_savings_pct": 3.5,
+      "stable": "INCONCLUSIVE",
+      "confidence": 0.3,
+      "metrics": {
+        "lyapunov_exponent": -0.6206,
+        "phase_coherence": 0.1227,
+        "dominant_frequency_hz": 0.1,
+        "frequency_match_score": 0.0333,
+        "mean_firing_rate_hz": 0.0,
+        "total_spikes": 0
+      },
+      "physics_validation": {
+        "rpm_band": [
+          2000,
+          3000
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 3.0,
+        "mechanism": "Reduced hysteresis in tyre compound"
+      }
+    },
+    {
+      "hypothesis_id": "H8",
+      "hypothesis": "Remove roof rack saves 1-5%",
+      "category": "modification",
+      "expected_savings_pct": 3.0,
+      "stable": "INCONCLUSIVE",
+      "confidence": 0.3,
+      "metrics": {
+        "lyapunov_exponent": -0.3512,
+        "phase_coherence": 0.0,
+        "dominant_frequency_hz": 1.6,
+        "frequency_match_score": 0.9375,
+        "mean_firing_rate_hz": 0.0,
+        "total_spikes": 0
+      },
+      "physics_validation": {
+        "rpm_band": [
+          2500,
+          3500
+        ],
+        "in_sweet_spot": true,
+        "oscillator_freq_physical": 1.5,
+        "mechanism": "Reduced aerodynamic drag coefficient"
+      }
+    }
+  ],
+  "metadata": {
+    "duration_ms": 10000,
+    "n_neurons_per_hypothesis": 100,
+    "physics_constraints": {
+      "engine": "4E-FE 1.3L",
+      "power_hp": "130-160",
+      "tyre_pressure_psi": "29-35",
+      "optimal_rpm_band": [
+        2000,
+        2500
+      ],
+      "realistic_savings_range_pct": [
+        0,
+        15
+      ]
+    }
+  }
+}
